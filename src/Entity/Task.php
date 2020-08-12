@@ -34,6 +34,14 @@ class Task
     private $completed;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="tasks")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Project $project
+     */
+    private $project;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -75,6 +83,25 @@ class Task
     public function setCompleted(bool $completed): self
     {
         $this->completed = $completed;
+
+        return $this;
+    }
+
+    /**
+     * @return Project|null
+     */
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Project|null $project
+     * @return $this
+     */
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
 
         return $this;
     }
