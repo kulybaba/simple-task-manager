@@ -35,6 +35,14 @@ class Project
      */
     private $tasks;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="projects")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @var User $user
+     */
+    private $user;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -102,6 +110,25 @@ class Project
                 $task->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     * @return $this
+     */
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
