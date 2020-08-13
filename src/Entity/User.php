@@ -6,10 +6,14 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="`user`")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface
 {
@@ -24,6 +28,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(
+     *     message="Password should not be blank",
+     *     groups={"login", "registration"}
+     * )
+     * @Assert\Email(
+     *     message="The email '{{ value }}' is not a valid email",
+     *     groups={"login", "registration"}
+     * )
      *
      * @var string $email
      */
@@ -34,10 +46,21 @@ class User implements UserInterface
      *
      * @var array $roles
      */
-    private $roles = [];
+    private $roles = ['ROLE_USER'];
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(
+     *     message="Password should not be blank",
+     *     groups={"login"}
+     * )
+     * @Assert\Length(
+     *     max="30",
+     *     min="8",
+     *     maxMessage="Password must contain maximum 30 characters",
+     *     minMessage="Password must contain minimum 8 characters",
+     *     groups={"login"}
+     * )
      *
      * @var string $password
      */
@@ -45,6 +68,17 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="First name should not be blank",
+     *     groups={"registration"}
+     * )
+     * @Assert\Length(
+     *     max="20",
+     *     min="2",
+     *     maxMessage="First name must contain maximum 20 characters",
+     *     minMessage="First name must contain minimum 2 characters",
+     *     groups={"registration"}
+     * )
      *
      * @var string $firstName
      */
@@ -52,6 +86,17 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Last name should not be blank",
+     *     groups={"registration"}
+     * )
+     * @Assert\Length(
+     *     max="20",
+     *     min="2",
+     *     maxMessage="Last name must contain maximum 20 characters",
+     *     minMessage="Last name must contain minimum 2 characters",
+     *     groups={"registration"}
+     * )
      *
      * @var string $lastName
      */
@@ -59,6 +104,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="API token should not be blank",
+     *     groups={"registration"}
+     * )
      *
      * @var string $apiToken
      */
@@ -70,6 +119,30 @@ class User implements UserInterface
      * @var Collection|Project[] $projects
      */
     private $projects;
+
+    /**
+     * @Assert\NotBlank(
+     *     message="Password should not be blank",
+     *     groups={"registration"}
+     * )
+     * @Assert\Length(
+     *     max="30",
+     *     min="8",
+     *     maxMessage="Password must contain maximum 30 characters",
+     *     minMessage="Password must contain minimum 8 characters",
+     *     groups={"registration"}
+     * )
+     *
+     * @var string $plainPassword
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool $verified
+     */
+    private $verified = false;
 
     public function __construct()
     {
@@ -174,8 +247,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     /**
@@ -270,6 +342,44 @@ class User implements UserInterface
                 $project->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     * @return $this
+     */
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+
+    /**
+     * @param bool $verified
+     * @return $this
+     */
+    public function setIsVerified(bool $verified): self
+    {
+        $this->verified = $verified;
 
         return $this;
     }
