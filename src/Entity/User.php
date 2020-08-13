@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="`user`")
  */
 class User implements UserInterface
 {
@@ -24,6 +26,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email(message="The email '{{ value }}' is not a valid email.")
      *
      * @var string $email
      */
@@ -38,6 +42,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     max="30",
+     *     min="8",
+     *     maxMessage="Password must contain maximum 30 characters.",
+     *     minMessage="Password must contain minimum 8 characters."
+     * )
      *
      * @var string $password
      */
@@ -70,6 +81,11 @@ class User implements UserInterface
      * @var Collection|Project[] $projects
      */
     private $projects;
+
+    /**
+     * @var string $plainPassword
+     */
+    private $plainPassword;
 
     public function __construct()
     {
@@ -174,8 +190,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     /**
@@ -270,6 +285,25 @@ class User implements UserInterface
                 $project->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     * @return $this
+     */
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
