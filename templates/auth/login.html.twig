@@ -3,15 +3,17 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-    <h3>Please sign in</h3>
+    <div class="row justify-content-md-center h-100 align-items-center">
+        <div class="col-3 text-center main-wrapper">
+            {% if errors %}
+                <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
+            {% endif %}
 
-    {% if errors %}
-        <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
-    {% endif %}
-
-    {{ form_start(form) }}
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        {{ form_widget(form) }}
-        <button type="submit">Sign in</button>
-    {{ form_end(form) }}
+            {{ form_start(form) }}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            {{ form_widget(form) }}
+            <button class="btn btn-primary" type="submit">Login</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
