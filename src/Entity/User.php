@@ -29,7 +29,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(
-     *     message="Password should not be blank",
+     *     message="Email should not be blank",
      *     groups={"login", "registration"}
      * )
      * @Assert\Email(

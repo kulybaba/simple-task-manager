@@ -1,20 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Simple Task Manager{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/petrokulybaba/Web/Symfony/simple-task-manager/src/Controller/IndexController.php'|file_link(0) }}">src/Controller/IndexController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/petrokulybaba/Web/Symfony/simple-task-manager/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
-    </ul>
-</div>
+    {% if projects|length > 0 %}
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-4">
+                    <div class="card project-card">
+                        <div class="card-header card-caption">
+                            <i class="far fa-list-alt"></i>{{ project.name }}
+                            <div class="float-right">
+                                <a href="#" data-toggle="tooltip" data-placement="left" title="Edit"><i class="fas fa-pen"></i></a>
+                                <a href="#" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-header card-add-task">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Start typing here to create a task...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success" type="button">Add task</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body text-black">
+                            {% if project.tasks|length > 0 %}
+                                <ul class="list-group">
+                                    {% for task in project.tasks %}
+                                        <li class="list-group-item list-group-item-action">
+                                            <input class="task-checkbox" type="checkbox">
+                                            <span class="task-text">{{ task.text }}</span>
+                                            <div class="list-group-actions float-right">
+                                                <a href="#" data-toggle="tooltip" data-placement="left" title="Sort"><i class="fas fa-sort"></i></a>
+                                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fas fa-pen"></i></a>
+                                                <a href="#" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center">
+                                    <p class="mt-4">There are no tasks...</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="row justify-content-md-center h-100 align-items-center">
+            <div class="col-3 text-center main-wrapper">
+                <p>There are no projects...</p>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

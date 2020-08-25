@@ -1,0 +1,121 @@
+@import '~bootstrap/scss/bootstrap';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import './variables';
+
+.navbar {
+    background-color: $blue
+}
+
+.main-container {
+    height: 100vh;
+    min-height: 500px;
+    background-image: url('https://source.unsplash.com/BtbjCFUvBXs/1920x1080');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.main-wrapper {
+    border: 2px solid $blue;
+    border-radius: 10px;
+    padding: 40px;
+    background-color: $white;
+}
+
+form label {
+    font-weight: bold;
+}
+
+a {
+    color: $white;
+
+    &:hover {
+        color: $white;
+    }
+
+    i {
+        color: $gray;
+    }
+}
+
+i {
+    margin-right: 5px;
+}
+
+.fa-plus {
+    font-size: 25px;
+    color: $green;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+input[type='checkbox'] {
+    margin-right: 20px;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary.focus {
+    background-color: $blue;
+    border-color: $blue;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: $blue;
+}
+
+.btn-success, .btn-success:hover, .btn-success:focus, .btn-success.focus {
+    background-color: $green;
+    border-color: $green;
+}
+
+.btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
+.show > .btn-success.dropdown-toggle {
+    background-color: $green;
+}
+
+.project-card {
+    border: 2px solid $blue;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-top: 20px;
+
+    .card-caption {
+        color: $white;
+        background-color: $blue;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .card-add-task {
+        background-color: $gray;
+    }
+
+    .card-body {
+        padding: 0;
+
+        .list-group li .list-group-actions {
+            color: $gray;
+        }
+
+        .list-group li:first-child {
+            border-radius: 0;
+        }
+
+        .list-group li:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+    }
+}
+
+.input-group {
+    .input-group-prepend {
+        .input-group-text {
+            padding-left: 0;
+            padding-right: 17px;
+            background-color: transparent;
+        }
+    }
+}

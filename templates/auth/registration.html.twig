@@ -3,10 +3,12 @@
 {% block title %}Registration{% endblock %}
 
 {% block body %}
-    <h3>Registration</h3>
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn">Registration</button>
-    {{ form_end(form) }}
+    <div class="row justify-content-md-center h-100 align-items-center">
+        <div class="col-3 text-center main-wrapper">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary" type="submit" class="btn">Registration</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
