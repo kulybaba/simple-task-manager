@@ -31,7 +31,7 @@ class Task
      * 
      * @var bool $completed
      */
-    private $completed;
+    private $completed = false;
 
     /**
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="tasks")

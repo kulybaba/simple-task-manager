@@ -3,6 +3,7 @@ import 'bootstrap';
 import 'materialize-css/dist/js/materialize.min'
 import bsCustomFileInput from 'bs-custom-file-input';
 import $ from 'jquery';
+import './api'
 
 bsCustomFileInput.init();
 

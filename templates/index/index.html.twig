@@ -22,15 +22,15 @@
                                         <i class="fas fa-plus"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Start typing here to create a task...">
+                                <input type="text" class="form-control add-task-input-{{ project.id }}" placeholder="Start typing here to create a task...">
                                 <div class="input-group-append">
-                                    <button class="btn btn-success" type="button">Add task</button>
+                                    <button class="btn btn-success btn-add-task" type="button" data-id="{{ project.id }}">Add task</button>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body text-black">
                             {% if project.tasks|length > 0 %}
-                                <ul class="list-group">
+                                <ul class="list-group task-list-{{ project.id }}">
                                     {% for task in project.tasks %}
                                         <li class="list-group-item list-group-item-action">
                                             <input class="task-checkbox" type="checkbox">
@@ -38,7 +38,7 @@
                                             <div class="list-group-actions float-right">
                                                 <a href="#" data-toggle="tooltip" data-placement="left" title="Sort"><i class="fas fa-sort"></i></a>
                                                 <a href="#" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fas fa-pen"></i></a>
-                                                <a href="#" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                                <a class="btn-delete-task" href="#" data-toggle="tooltip" data-placement="right" title="Delete" data-id="{{ task.id }}"><i class="fas fa-trash-alt"></i></a>
                                             </div>
                                         </li>
                                     {% endfor %}
