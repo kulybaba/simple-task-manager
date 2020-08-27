@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
@@ -21,6 +22,15 @@ class Task
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Text should not be blank",
+     *     groups={"add-task"}
+     * )
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Text must contain maximum 255 characters",
+     *     groups={"add-task"}
+     * )
      * 
      * @var string $text
      */
