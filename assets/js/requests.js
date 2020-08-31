@@ -21,8 +21,8 @@ $(document).ready(function () {
 
                 $('.task-list-' + id).append(`    
                     <li class="list-group-item list-group-item-action task-${data.task.id}">
-                        <input class="task-checkbox" type="checkbox">
-                        <span class="task-text">${text}</span>
+                        <input class="task-checkbox" type="checkbox" data-id="${data.task.id}">
+                        <span class="task-text task-text-${data.task.id}">${text}</span>
                         <div class="list-group-actions float-right">
                             <a href="#"><i class="fas fa-sort"></i></a>
                             <a href="#"><i class="fas fa-pen"></i></a>
@@ -44,7 +44,7 @@ $(document).ready(function () {
 
                     showAlert(htmlMessage, 'alert-warning');
                 } else {
-                    showAlert('Error, please try again later', 'alert-danger');
+                    showAlert('Error, please try again later...', 'alert-danger');
                 }
             }
         });
@@ -74,7 +74,25 @@ $(document).ready(function () {
                 showAlert('Task successfully deleted!', 'alert-success');
             },
             error: function () {
-                showAlert('Error, please try again later', 'alert-danger');
+                showAlert('Error, please try again later...', 'alert-danger');
+            }
+        });
+    });
+
+    // Check/uncheck task
+    $('.project-card-body').on('click', '.task-list li .task-checkbox', function () {
+        let id = $(this).data('id');
+
+        $('.task-text-' + id).toggleClass('task-checked');
+        $.ajax({
+            url: `/api/task/${id}/completion`,
+            method: 'POST',
+            success: function (data) {
+                let completion = data.completed ? 'checked' : 'unchecked';
+                showAlert(`Task successfully ${completion}!`, 'alert-success');
+            },
+            error: function () {
+                showAlert('Error, please try again later...', 'alert-danger');
             }
         });
     });

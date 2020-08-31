@@ -35,8 +35,8 @@
                                 <ul class="list-group task-list task-list-{{ project.id }}">
                                     {% for task in project.tasks %}
                                         <li class="list-group-item list-group-item-action task-{{ task.id }}">
-                                            <input class="task-checkbox" type="checkbox">
-                                            <span class="task-text">{{ task.text }}</span>
+                                            <input class="task-checkbox" type="checkbox" {% if task.completed %}checked="checked"{% endif %} data-id="{{ task.id }}">
+                                            <span class="task-text task-text-{{ task.id}} {% if task.completed %}task-checked{% endif %}">{{ task.text }}</span>
                                             <div class="list-group-actions float-right">
                                                 <a href="#"><i class="fas fa-sort"></i></a>
                                                 <a href="#"><i class="fas fa-pen"></i></a>

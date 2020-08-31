@@ -40,13 +40,27 @@ class TaskController extends AbstractController
     /**
      * @Route("/task/{id}", name="task_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Task $task)
+    public function delete(EntityManagerInterface $entityManager, Task $task)
     {
         $entityManager->remove($task);
         $entityManager->flush();
 
         return $this->json([
             'success' => true,
+        ]);
+    }
+
+    /**
+     * @Route("/task/{id}/completion", name="task_completion", methods={"POST"})
+     */
+    public function completion(EntityManagerInterface $entityManager, Task $task)
+    {
+        $task->setCompleted(!$task->isCompleted());
+        $entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+            'completed' => $task->isCompleted(),
         ]);
     }
 }
