@@ -21,12 +21,21 @@ $(document).ready(function () {
 
                 $('.task-list-' + id).append(`    
                     <li class="list-group-item list-group-item-action task-${data.task.id}">
-                        <input class="task-checkbox" type="checkbox" data-id="${data.task.id}">
-                        <span class="task-text task-text-${data.task.id}">${text}</span>
-                        <div class="list-group-actions float-right">
-                            <a href="#"><i class="fas fa-sort"></i></a>
-                            <a href="#"><i class="fas fa-pen"></i></a>
-                            <a class="btn-delete-task" href="#" data-id="${data.task.id}"><i class="fas fa-trash-alt"></i></a>
+                        <div class="row">
+                            <div class="col-10">
+                                <input class="task-checkbox task-checkbox-${data.task.id}" type="checkbox" data-id="${data.task.id}">
+                                <span class="task-text task-text-${data.task.id}">${text}</span>
+                                <input class="task-input task-input-${data.task.id} d-none" type="text">
+                            </div>
+                            <div class="col">
+                                <div class="list-group-actions float-right">
+                                    <a class="btn-save-task btn-save-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-save"></i></a>
+                                    <a class="btn-cancel-task btn-cancel-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-times"></i></a>
+                                    <a class="btn-sort-task btn-sort-task-${data.task.id}" href="#"><i class="fas fa-sort"></i></a>
+                                    <a class="btn-edit-task btn-edit-task-${data.task.id}" href="#" data-id="${data.task.id}"><i class="fas fa-pen"></i></a>
+                                    <a class="btn-delete-task btn-delete-task-${data.task.id}" href="#" data-id="${data.task.id}"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 `);
@@ -96,6 +105,45 @@ $(document).ready(function () {
             }
         });
     });
+
+    // Edit task
+    $('.project-card-body').on('click', '.task-list li div .btn-save-task', function () {
+        let id = $(this).data('id');
+        let text = $('.task-input-' + id).val();
+
+        $.ajax({
+            url: '/api/task/' + id,
+            method: 'POST',
+            data: JSON.stringify({
+                text: text,
+            }),
+            success: function (data) {
+                $('.btn-save-task-' + id).toggleClass('d-none');
+                $('.btn-cancel-task-' + id).toggleClass('d-none');
+                $('.btn-sort-task-' + id).toggleClass('d-none');
+                $('.btn-edit-task-' + id).toggleClass('d-none');
+                $('.btn-delete-task-' + id).toggleClass('d-none');
+                $('.task-checkbox-' + id).toggleClass('d-none');
+                $('.task-text-' + id).toggleClass('d-none');
+                $('.task-input-' + id).toggleClass('d-none');
+                $('.task-text-' + id).text(data.task.text);
+
+                showAlert('Task successfully edited!', 'alert-success');
+            },
+            error: function (data) {
+                if (data.status === 400) {
+                    let htmlMessage = '';
+                    $.each(data.responseJSON.errors.fields, function(field, message) {
+                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
+                    });
+
+                    showAlert(htmlMessage, 'alert-warning');
+                } else {
+                    showAlert('Error, please try again later...', 'alert-danger');
+                }
+            }
+        });
+    });
 })
 
 function showAlert(message, type) {
@@ -106,4 +154,8 @@ function showAlert(message, type) {
     $('.alert').removeClass('alert-danger');
     $('.alert').addClass(type);
     $('.alert').addClass('show');
+
+    setTimeout(function () {
+        $('.alert').removeClass('show');
+    }, 3000);
 }

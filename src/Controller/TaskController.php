@@ -38,6 +38,29 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @Route("/task/{id}", name="task_edit", methods={"POST"})
+     */
+    public function edit(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        ValidateService $validateService,
+        Task $task
+    ) {
+        /** @var Task $taskWithText */
+        $taskWithText = $serializer->deserialize($request->getContent(), Task::class, JsonEncoder::FORMAT);
+        $validateService->validate($taskWithText, ['validation_groups' => 'edit-task']);
+
+        $task->setText($taskWithText->getText());
+        $entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+            'task' => $task,
+        ]);
+    }
+
+    /**
      * @Route("/task/{id}", name="task_delete", methods={"DELETE"})
      */
     public function delete(EntityManagerInterface $entityManager, Task $task)

@@ -24,12 +24,12 @@ class Task
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
      *     message="Text should not be blank",
-     *     groups={"add-task"}
+     *     groups={"add-task", "edit-task"}
      * )
      * @Assert\Length(
      *     max="255",
      *     maxMessage="Text must contain maximum 255 characters",
-     *     groups={"add-task"}
+     *     groups={"add-task", "edit-task"}
      * )
      * 
      * @var string $text

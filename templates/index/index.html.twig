@@ -35,12 +35,21 @@
                                 <ul class="list-group task-list task-list-{{ project.id }}">
                                     {% for task in project.tasks %}
                                         <li class="list-group-item list-group-item-action task-{{ task.id }}">
-                                            <input class="task-checkbox" type="checkbox" {% if task.completed %}checked="checked"{% endif %} data-id="{{ task.id }}">
-                                            <span class="task-text task-text-{{ task.id}} {% if task.completed %}task-checked{% endif %}">{{ task.text }}</span>
-                                            <div class="list-group-actions float-right">
-                                                <a href="#"><i class="fas fa-sort"></i></a>
-                                                <a href="#"><i class="fas fa-pen"></i></a>
-                                                <a class="btn-delete-task" href="#" data-id="{{ task.id }}"><i class="fas fa-trash-alt"></i></a>
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <input class="task-checkbox task-checkbox-{{ task.id }}" type="checkbox" {% if task.completed %}checked="checked"{% endif %} data-id="{{ task.id }}">
+                                                    <span class="task-text task-text-{{ task.id}} {% if task.completed %}task-checked{% endif %}">{{ task.text }}</span>
+                                                    <input class="task-input task-input-{{ task.id }} d-none" type="text">
+                                                </div>
+                                                <div class="col">
+                                                    <div class="list-group-actions float-right">
+                                                        <a class="btn-save-task btn-save-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-save"></i></a>
+                                                        <a class="btn-cancel-task btn-cancel-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-times"></i></a>
+                                                        <a class="btn-sort-task btn-sort-task-{{ task.id }}" href="#"><i class="fas fa-sort"></i></a>
+                                                        <a class="btn-edit-task btn-edit-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-pen"></i></a>
+                                                        <a class="btn-delete-task btn-delete-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-trash-alt"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </li>
                                     {% endfor %}
