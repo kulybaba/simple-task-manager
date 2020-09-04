@@ -3,6 +3,8 @@
 {% block title %}Simple Task Manager{% endblock %}
 
 {% block body %}
+    {% include 'alert.html.twig' %}
+
     {% if projects|length > 0 %}
         <div class="row">
             {% for project in projects %}
@@ -11,8 +13,8 @@
                         <div class="card-header card-caption">
                             <i class="far fa-list-alt"></i>{{ project.name }}
                             <div class="float-right">
-                                <a href="#" data-toggle="tooltip" data-placement="left" title="Edit"><i class="fas fa-pen"></i></a>
-                                <a href="#" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                <a href="#"><i class="fas fa-pen"></i></a>
+                                <a href="#"><i class="fas fa-trash-alt"></i></a>
                             </div>
                         </div>
                         <div class="card-header card-add-task">
@@ -22,30 +24,39 @@
                                         <i class="fas fa-plus"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Start typing here to create a task...">
+                                <input type="text" class="form-control add-task-input-{{ project.id }}" placeholder="Start typing here to create a task...">
                                 <div class="input-group-append">
-                                    <button class="btn btn-success" type="button">Add task</button>
+                                    <button class="btn btn-success btn-add-task" type="button" data-id="{{ project.id }}">Add task</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body text-black">
+                        <div class="card-body text-black project-card-body project-card-body-{{ project.id }}">
                             {% if project.tasks|length > 0 %}
-                                <ul class="list-group">
-                                    {% for task in project.tasks %}
-                                        <li class="list-group-item list-group-item-action">
-                                            <input class="task-checkbox" type="checkbox">
-                                            <span class="task-text">{{ task.text }}</span>
-                                            <div class="list-group-actions float-right">
-                                                <a href="#" data-toggle="tooltip" data-placement="left" title="Sort"><i class="fas fa-sort"></i></a>
-                                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fas fa-pen"></i></a>
-                                                <a href="#" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                <ul class="list-group task-list task-list-{{ project.id }}">
+                                    {% for task in project.tasks|sort((a, b) => a.position <=> b.position) %}
+                                        <li class="list-group-item list-group-item-action task task-{{ task.id }}" data-id="{{ task.id }}">
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <input class="task-checkbox task-checkbox-{{ task.id }}" type="checkbox" {% if task.completed %}checked="checked"{% endif %} data-id="{{ task.id }}">
+                                                    <span class="task-text task-text-{{ task.id}} {% if task.completed %}task-checked{% endif %}">{{ task.text }}</span>
+                                                    <input class="task-input task-input-{{ task.id }} d-none" type="text">
+                                                </div>
+                                                <div class="col">
+                                                    <div class="list-group-actions float-right">
+                                                        <a class="btn-save-task btn-save-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-save"></i></a>
+                                                        <a class="btn-cancel-task btn-cancel-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-times"></i></a>
+                                                        <a class="btn-sort-task btn-sort-task btn-sort-task-{{ task.id }}" href="#"><i class="fas fa-sort"></i></a>
+                                                        <a class="btn-edit-task btn-edit-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-pen"></i></a>
+                                                        <a class="btn-delete-task btn-delete-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-trash-alt"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </li>
                                     {% endfor %}
                                 </ul>
                             {% else %}
-                                <div class="text-center">
-                                    <p class="mt-4">There are no tasks...</p>
+                                <div class="text-center task-no">
+                                    <p class="mt-4">No tasks...</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -56,7 +67,7 @@
     {% else %}
         <div class="row justify-content-md-center h-100 align-items-center">
             <div class="col-3 text-center main-wrapper">
-                <p>There are no projects...</p>
+                <p>No projects...</p>
             </div>
         </div>
     {% endif %}

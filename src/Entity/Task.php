@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
@@ -21,6 +22,15 @@ class Task
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Text should not be blank",
+     *     groups={"add-task", "edit-task"}
+     * )
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Text must contain maximum 255 characters",
+     *     groups={"add-task", "edit-task"}
+     * )
      * 
      * @var string $text
      */
@@ -31,7 +41,7 @@ class Task
      * 
      * @var bool $completed
      */
-    private $completed;
+    private $completed = false;
 
     /**
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="tasks")
@@ -40,6 +50,13 @@ class Task
      * @var Project $project
      */
     private $project;
+
+    /**
+     * @ORM\Column(type="integer")
+     *
+     * @var int $position
+     */
+    private $position = 0;
 
     /**
      * @return int|null
@@ -102,6 +119,25 @@ class Task
     public function setProject(?Project $project): self
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     * @return $this
+     */
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }
