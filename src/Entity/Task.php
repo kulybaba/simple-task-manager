@@ -52,6 +52,13 @@ class Task
     private $project;
 
     /**
+     * @ORM\Column(type="integer")
+     *
+     * @var int $position
+     */
+    private $position = 0;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -112,6 +119,25 @@ class Task
     public function setProject(?Project $project): self
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     * @return $this
+     */
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }

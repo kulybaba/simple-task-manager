@@ -40,6 +40,7 @@ class TaskNormalizer implements NormalizerInterface, DenormalizerInterface, Cach
         return [
             'id' => $object->getId(),
             'text' => $object->getText(),
+            'position' => $object->getPosition(),
         ];
     }
 

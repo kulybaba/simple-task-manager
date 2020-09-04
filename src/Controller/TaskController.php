@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Repository\TaskRepository;
 use App\Service\ValidateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +39,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}", name="task_edit", methods={"POST"})
+     * @Route("/task/{id}", requirements={"id"="\d+"}, name="task_edit", methods={"POST"})
      */
     public function edit(
         Request $request,
@@ -61,7 +62,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}", name="task_delete", methods={"DELETE"})
+     * @Route("/task/{id}", requirements={"id"="\d+"}, name="task_delete", methods={"DELETE"})
      */
     public function delete(EntityManagerInterface $entityManager, Task $task)
     {
@@ -74,7 +75,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}/completion", name="task_completion", methods={"POST"})
+     * @Route("/task/{id}/completion", requirements={"id"="\d+"}, name="task_completion", methods={"POST"})
      */
     public function completion(EntityManagerInterface $entityManager, Task $task)
     {
@@ -84,6 +85,28 @@ class TaskController extends AbstractController
         return $this->json([
             'success' => true,
             'completed' => $task->isCompleted(),
+        ]);
+    }
+
+    /**
+     * @Route("/task/sort", name="task_sort", methods={"POST"})
+     */
+    public function sort(Request $request, EntityManagerInterface $entityManager, TaskRepository $taskRepository)
+    {
+        $i = 1;
+        $data = json_decode($request->getContent(), true);
+        foreach ($data['tasks'] as $id) {
+            /** @var Task $task */
+            $task = $taskRepository->findOneBy(['id' => $id]);
+            $task->setPosition($i);
+
+            $entityManager->persist($task);
+            $entityManager->flush();
+            $i++;
+        }
+
+        return $this->json([
+            'success' => true,
         ]);
     }
 }

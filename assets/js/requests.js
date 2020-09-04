@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Sortable from "sortablejs";
 
 $(document).ready(function () {
     // Add task
@@ -17,10 +18,15 @@ $(document).ready(function () {
                 if ($('.task-list-' + id).length === 0) {
                     $('.project-card-body-' + id).empty();
                     $('.project-card-body-' + id).append(`<ul class="list-group task-list task-list-${id}"></ul>`);
+
+                    Sortable.create($('.task-list-' + id).get(0), {
+                        handle: '.fa-sort',
+                        animation: 150
+                    });
                 }
 
                 $('.task-list-' + id).append(`    
-                    <li class="list-group-item list-group-item-action task-${data.task.id}">
+                    <li class="list-group-item list-group-item-action task task-${data.task.id}" data-id="${data.task.id}">
                         <div class="row">
                             <div class="col-10">
                                 <input class="task-checkbox task-checkbox-${data.task.id}" type="checkbox" data-id="${data.task.id}">
@@ -31,7 +37,7 @@ $(document).ready(function () {
                                 <div class="list-group-actions float-right">
                                     <a class="btn-save-task btn-save-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-save"></i></a>
                                     <a class="btn-cancel-task btn-cancel-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-times"></i></a>
-                                    <a class="btn-sort-task btn-sort-task-${data.task.id}" href="#"><i class="fas fa-sort"></i></a>
+                                    <a class="btn-sort-task btn-sort-task btn-sort-task-${data.task.id}" href="#"><i class="fas fa-sort"></i></a>
                                     <a class="btn-edit-task btn-edit-task-${data.task.id}" href="#" data-id="${data.task.id}"><i class="fas fa-pen"></i></a>
                                     <a class="btn-delete-task btn-delete-task-${data.task.id}" href="#" data-id="${data.task.id}"><i class="fas fa-trash-alt"></i></a>
                                 </div>
@@ -130,6 +136,35 @@ $(document).ready(function () {
 
                 showAlert('Task successfully edited!', 'alert-success');
             },
+            error: function (data) {
+                if (data.status === 400) {
+                    let htmlMessage = '';
+                    $.each(data.responseJSON.errors.fields, function(field, message) {
+                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
+                    });
+
+                    showAlert(htmlMessage, 'alert-warning');
+                } else {
+                    showAlert('Error, please try again later...', 'alert-danger');
+                }
+            }
+        });
+    });
+
+    // Sort task
+    $('.project-card-body').on('dragend', '.task-list .task', function () {
+        let taskPositions = [];
+
+        $.each($(this).parent().children(), function (index, element) {
+            taskPositions.push($(element).data('id'));
+        });
+
+        $.ajax({
+            url: '/api/task/sort',
+            method: 'POST',
+            data: JSON.stringify({
+                tasks: taskPositions,
+            }),
             error: function (data) {
                 if (data.status === 400) {
                     let htmlMessage = '';
