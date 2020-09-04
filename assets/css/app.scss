@@ -132,7 +132,7 @@ input[type='checkbox'] {
 .alert {
     width: 100%;
     margin-top: -30px;
-    z-index: 100;
+    z-index: 1051;
     position: absolute;
 
     .alert-content {
@@ -144,4 +144,8 @@ input[type='checkbox'] {
 
 .task-checked {
     text-decoration: line-through;
+}
+
+.add-project {
+    width: 100%;
 }

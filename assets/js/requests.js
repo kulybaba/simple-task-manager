@@ -3,7 +3,7 @@ import Sortable from "sortablejs";
 
 $(document).ready(function () {
     // Add task
-    $('.btn-add-task').on('click', function () {
+    $('.main-row').on('click', '.btn-add-task', function () {
         let id = $(this).data('id');
         let text = $('.add-task-input-' + id).val();
 
@@ -66,7 +66,7 @@ $(document).ready(function () {
     });
 
     // Delete task
-    $('.project-card-body').on('click', '.task-list li div .btn-delete-task', function () {
+    $('.main-row').on('click', '.btn-delete-task', function () {
         let id = $(this).data('id');
 
         $.ajax({
@@ -95,7 +95,7 @@ $(document).ready(function () {
     });
 
     // Check/uncheck task
-    $('.project-card-body').on('click', '.task-list li .task-checkbox', function () {
+    $('.main-row').on('click', '.task-checkbox', function () {
         let id = $(this).data('id');
 
         $('.task-text-' + id).toggleClass('task-checked');
@@ -113,7 +113,7 @@ $(document).ready(function () {
     });
 
     // Edit task
-    $('.project-card-body').on('click', '.task-list li div .btn-save-task', function () {
+    $('.main-row').on('click', '.btn-save-task', function () {
         let id = $(this).data('id');
         let text = $('.task-input-' + id).val();
 
@@ -152,7 +152,7 @@ $(document).ready(function () {
     });
 
     // Sort task
-    $('.project-card-body').on('dragend', '.task-list .task', function () {
+    $('.main-row').on('dragend', '.task', function () {
         let taskPositions = [];
 
         $.each($(this).parent().children(), function (index, element) {
@@ -165,6 +165,69 @@ $(document).ready(function () {
             data: JSON.stringify({
                 tasks: taskPositions,
             }),
+            error: function (data) {
+                if (data.status === 400) {
+                    let htmlMessage = '';
+                    $.each(data.responseJSON.errors.fields, function(field, message) {
+                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
+                    });
+
+                    showAlert(htmlMessage, 'alert-warning');
+                } else {
+                    showAlert('Error, please try again later...', 'alert-danger');
+                }
+            }
+        });
+    });
+
+    // Add project
+    $('.btn-add-project').on('click', function () {
+        let name = $('.add-project').val();
+
+        $.ajax({
+            url: '/api/project',
+            method: 'POST',
+            data: JSON.stringify({
+                name: name,
+            }),
+            success: function (data) {
+                $('.main-row').append(`    
+                    <div class="col-4">
+                        <div class="card project-card">
+                            <div class="card-header card-caption">
+                                <i class="far fa-list-alt"></i><b>${data.project.name}</b>
+                                <div class="float-right">
+                                    <a href="#"><i class="fas fa-pen"></i></a>
+                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </div>
+                            <div class="card-header card-add-task">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control add-task-input-${data.project.id}" placeholder="Start typing here to create a task...">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success btn-add-task" type="button" data-id="${data.project.id}">Add task</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body text-black project-card-body project-card-body-${data.project.id}">
+                                <div class="text-center task-no">
+                                    <p class="mt-4">No tasks...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                $('.add-project').val('');
+                $('#add-project-modal .modal-dialog .modal-content .modal-header .close').trigger('click');
+
+                showAlert('Project successfully added!', 'alert-success');
+            },
             error: function (data) {
                 if (data.status === 400) {
                     let htmlMessage = '';

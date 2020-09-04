@@ -13,7 +13,7 @@ $(document).ready(function () {
         $('.alert').removeClass('show');
     });
 
-    $('.project-card-body').on('click', '.task-list li div .btn-edit-task', function () {
+    $('.main-row').on('click', '.btn-edit-task', function () {
         let id = $(this).data('id');
 
         $(this).toggleClass('d-none');
@@ -27,7 +27,7 @@ $(document).ready(function () {
         $('.task-input-' + id).val($('.task-text-' + id).text());
     });
 
-    $('.project-card-body').on('click', '.task-list li div .btn-cancel-task', function () {
+    $('.main-row').on('click', '.btn-cancel-task', function () {
         let id = $(this).data('id');
 
         $(this).toggleClass('d-none');

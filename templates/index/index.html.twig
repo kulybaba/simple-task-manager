@@ -6,12 +6,12 @@
     {% include 'alert.html.twig' %}
 
     {% if projects|length > 0 %}
-        <div class="row">
+        <div class="row main-row">
             {% for project in projects %}
                 <div class="col-4">
                     <div class="card project-card">
                         <div class="card-header card-caption">
-                            <i class="far fa-list-alt"></i>{{ project.name }}
+                            <i class="far fa-list-alt"></i><b>{{ project.name }}</b>
                             <div class="float-right">
                                 <a href="#"><i class="fas fa-pen"></i></a>
                                 <a href="#"><i class="fas fa-trash-alt"></i></a>
