@@ -3,7 +3,7 @@ import Sortable from "sortablejs";
 
 $(document).ready(function () {
     // Add task
-    $('.main-row').on('click', '.btn-add-task', function () {
+    $('.main-container').on('click', '.btn-add-task', function () {
         let id = $(this).data('id');
         let text = $('.add-task-input-' + id).val();
 
@@ -66,7 +66,7 @@ $(document).ready(function () {
     });
 
     // Delete task
-    $('.main-row').on('click', '.btn-delete-task', function () {
+    $('.main-container').on('click', '.btn-delete-task', function () {
         let id = $(this).data('id');
 
         $.ajax({
@@ -95,7 +95,7 @@ $(document).ready(function () {
     });
 
     // Check/uncheck task
-    $('.main-row').on('click', '.task-checkbox', function () {
+    $('.main-container').on('click', '.task-checkbox', function () {
         let id = $(this).data('id');
 
         $('.task-text-' + id).toggleClass('task-checked');
@@ -113,13 +113,13 @@ $(document).ready(function () {
     });
 
     // Edit task
-    $('.main-row').on('click', '.btn-save-task', function () {
+    $('.main-container').on('click', '.btn-save-task', function () {
         let id = $(this).data('id');
         let text = $('.task-input-' + id).val();
 
         $.ajax({
             url: '/api/task/' + id,
-            method: 'POST',
+            method: 'PUT',
             data: JSON.stringify({
                 text: text,
             }),
@@ -152,7 +152,7 @@ $(document).ready(function () {
     });
 
     // Sort task
-    $('.main-row').on('dragend', '.task', function () {
+    $('.main-container').on('dragend', '.task', function () {
         let taskPositions = [];
 
         $.each($(this).parent().children(), function (index, element) {
@@ -191,14 +191,19 @@ $(document).ready(function () {
                 name: name,
             }),
             success: function (data) {
+                if ($('.main-row').length === 0) {
+                    $('.main-container').empty();
+                    $('.main-container').append('<div class="row main-row"></div>');
+                }
+
                 $('.main-row').append(`    
-                    <div class="col-4">
+                    <div class="col-4 project-${data.project.id}">
                         <div class="card project-card">
                             <div class="card-header card-caption">
                                 <i class="far fa-list-alt"></i><b>${data.project.name}</b>
                                 <div class="float-right">
                                     <a href="#"><i class="fas fa-pen"></i></a>
-                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="btn-delete-project" href="#" data-id="${data.project.id}"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
                             <div class="card-header card-add-task">
@@ -226,7 +231,7 @@ $(document).ready(function () {
                 $('.add-project').val('');
                 $('#add-project-modal .modal-dialog .modal-content .modal-header .close').trigger('click');
 
-                showAlert('Project successfully added!', 'alert-success');
+                showAlert('Project successfully created!', 'alert-success');
             },
             error: function (data) {
                 if (data.status === 400) {
@@ -239,6 +244,35 @@ $(document).ready(function () {
                 } else {
                     showAlert('Error, please try again later...', 'alert-danger');
                 }
+            }
+        });
+    });
+
+    // Delete project
+    $('.main-container').on('click', '.btn-delete-project', function () {
+        let id = $(this).data('id');
+
+        $.ajax({
+            url: '/api/project/' + id,
+            method: 'DELETE',
+            success: function () {
+                $('.project-' + id).remove();
+
+                if ($('.main-row').children().length === 0) {
+                    $('.main-container').empty();
+                    $('.main-container').append(`
+                        <div class="row justify-content-md-center h-100 align-items-center">
+                            <div class="col-3 text-center main-wrapper">
+                                <p>No projects...</p>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                showAlert('Project successfully deleted!', 'alert-success');
+            },
+            error: function () {
+                showAlert('Error, please try again later...', 'alert-danger');
             }
         });
     });

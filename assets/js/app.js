@@ -13,7 +13,7 @@ $(document).ready(function () {
         $('.alert').removeClass('show');
     });
 
-    $('.main-row').on('click', '.btn-edit-task', function () {
+    $('.main-container').on('click', '.btn-edit-task', function () {
         let id = $(this).data('id');
 
         $(this).toggleClass('d-none');
@@ -27,7 +27,7 @@ $(document).ready(function () {
         $('.task-input-' + id).val($('.task-text-' + id).text());
     });
 
-    $('.main-row').on('click', '.btn-cancel-task', function () {
+    $('.main-container').on('click', '.btn-cancel-task', function () {
         let id = $(this).data('id');
 
         $(this).toggleClass('d-none');

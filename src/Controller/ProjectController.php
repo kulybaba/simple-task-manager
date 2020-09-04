@@ -38,4 +38,17 @@ class ProjectController extends AbstractController
             'project' => $project,
         ]);
     }
+
+    /**
+     * @Route("/project/{id}", requirements={"id"="\d+"}, name="project_delete", methods={"DELETE"})
+     */
+    public function delete(EntityManagerInterface $entityManager, Project $project)
+    {
+        $entityManager->remove($project);
+        $entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+        ]);
+    }
 }
