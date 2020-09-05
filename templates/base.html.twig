@@ -33,7 +33,9 @@
                 </div>
             </nav>
         </header>
-        {% include 'alert.html.twig' %}
+        <div class="container-fluid">
+            {% include 'alert.html.twig' %}
+        </div>
         <div class="container-fluid main-container">
             {% block body %}{% endblock %}
         </div>

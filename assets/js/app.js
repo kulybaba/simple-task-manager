@@ -13,6 +13,10 @@ $(document).ready(function () {
         $('.alert').removeClass('show');
     });
 
+    $('.btn-modal-close').on('click', function () {
+        $('.modal').css('display', 'none');
+    });
+
     $('.main-container').on('click', '.btn-edit-task', function () {
         let id = $(this).data('id');
 
@@ -40,6 +44,28 @@ $(document).ready(function () {
         $('.task-input-' + id).toggleClass('d-none');
     });
 
+    $('.main-container').on('click', '.btn-edit-project', function () {
+        let id = $(this).data('id');
+
+        $(this).toggleClass('d-none');
+        $('.btn-delete-project-' + id).toggleClass('d-none');
+        $('.btn-save-project-' + id).toggleClass('d-none');
+        $('.btn-cancel-project-' + id).toggleClass('d-none');
+        $('.project-name-' + id).toggleClass('d-none');
+        $('.project-input-' + id).toggleClass('d-none');
+        $('.project-input-' + id).val($('.project-name-' + id).text());
+    });
+
+    $('.main-container').on('click', '.btn-cancel-project', function () {
+        let id = $(this).data('id');
+
+        $(this).toggleClass('d-none');
+        $('.btn-save-project-' + id).toggleClass('d-none');
+        $('.btn-edit-project-' + id).toggleClass('d-none');
+        $('.btn-delete-project-' + id).toggleClass('d-none');
+        $('.project-name-' + id).toggleClass('d-none');
+        $('.project-input-' + id).toggleClass('d-none');
+    });
 
     $.each($('.task-list'), function (index, element) {
         Sortable.create(element, {

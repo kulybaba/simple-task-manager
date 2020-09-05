@@ -34,7 +34,7 @@ $(document).ready(function () {
                                 <input class="task-input task-input-${data.task.id} d-none" type="text">
                             </div>
                             <div class="col">
-                                <div class="list-group-actions float-right">
+                                <div class="list-group-actions float-right text-right">
                                     <a class="btn-save-task btn-save-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-save"></i></a>
                                     <a class="btn-cancel-task btn-cancel-task-${data.task.id} d-none" href="#" data-id="${data.task.id}"><i class="fas fa-times"></i></a>
                                     <a class="btn-sort-task btn-sort-task btn-sort-task-${data.task.id}" href="#"><i class="fas fa-sort"></i></a>
@@ -52,12 +52,7 @@ $(document).ready(function () {
             },
             error: function (data) {
                 if (data.status === 400) {
-                    let htmlMessage = '';
-                    $.each(data.responseJSON.errors.fields, function(field, message) {
-                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
-                    });
-
-                    showAlert(htmlMessage, 'alert-warning');
+                    showAlert(getErrorsFromResponse(data), 'alert-warning');
                 } else {
                     showAlert('Error, please try again later...', 'alert-danger');
                 }
@@ -138,12 +133,7 @@ $(document).ready(function () {
             },
             error: function (data) {
                 if (data.status === 400) {
-                    let htmlMessage = '';
-                    $.each(data.responseJSON.errors.fields, function(field, message) {
-                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
-                    });
-
-                    showAlert(htmlMessage, 'alert-warning');
+                    showAlert(getErrorsFromResponse(data), 'alert-warning');
                 } else {
                     showAlert('Error, please try again later...', 'alert-danger');
                 }
@@ -166,21 +156,12 @@ $(document).ready(function () {
                 tasks: taskPositions,
             }),
             error: function (data) {
-                if (data.status === 400) {
-                    let htmlMessage = '';
-                    $.each(data.responseJSON.errors.fields, function(field, message) {
-                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
-                    });
-
-                    showAlert(htmlMessage, 'alert-warning');
-                } else {
-                    showAlert('Error, please try again later...', 'alert-danger');
-                }
+                showAlert('Error, please try again later...', 'alert-danger');
             }
         });
     });
 
-    // Add project
+    // Create project
     $('.btn-add-project').on('click', function () {
         let name = $('.add-project').val();
 
@@ -200,10 +181,17 @@ $(document).ready(function () {
                     <div class="col-4 project-${data.project.id}">
                         <div class="card project-card">
                             <div class="card-header card-caption">
-                                <i class="far fa-list-alt"></i><b>${data.project.name}</b>
-                                <div class="float-right">
-                                    <a href="#"><i class="fas fa-pen"></i></a>
-                                    <a class="btn-delete-project" href="#" data-id="${data.project.id}"><i class="fas fa-trash-alt"></i></a>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <span class="project-name project-name-${data.project.id}"><i class="far fa-list-alt"></i>${data.project.name}</span>
+                                        <input class="project-input project-input-${data.project.id} d-none" type="text">
+                                    </div>
+                                    <div class="col float-right text-right">
+                                        <a class="btn-edit-project btn-edit-project-${data.project.id}" href="#" data-id="${data.project.id}"><i class="fas fa-pen"></i></a>
+                                        <a class="btn-delete-project btn-delete-project-${data.project.id}" href="#" data-id="${data.project.id}"><i class="fas fa-trash-alt"></i></a>
+                                        <a class="btn-save-project btn-save-project-${data.project.id} d-none" href="#" data-id="${data.project.id}"><i class="fas fa-save"></i></a>
+                                        <a class="btn-cancel-project btn-cancel-project-${data.project.id} d-none" href="#" data-id="${data.project.id}"><i class="fas fa-times"></i></a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-header card-add-task">
@@ -235,12 +223,7 @@ $(document).ready(function () {
             },
             error: function (data) {
                 if (data.status === 400) {
-                    let htmlMessage = '';
-                    $.each(data.responseJSON.errors.fields, function(field, message) {
-                        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
-                    });
-
-                    showAlert(htmlMessage, 'alert-warning');
+                    showAlert(getErrorsFromResponse(data), 'alert-warning');
                 } else {
                     showAlert('Error, please try again later...', 'alert-danger');
                 }
@@ -262,7 +245,7 @@ $(document).ready(function () {
                     $('.main-container').empty();
                     $('.main-container').append(`
                         <div class="row justify-content-md-center h-100 align-items-center">
-                            <div class="col-3 text-center main-wrapper">
+                            <div class="col-3 text-center no-project">
                                 <p>No projects...</p>
                             </div>
                         </div>
@@ -273,6 +256,38 @@ $(document).ready(function () {
             },
             error: function () {
                 showAlert('Error, please try again later...', 'alert-danger');
+            }
+        });
+    });
+
+    // Edit project
+    $('.main-container').on('click', '.btn-save-project', function () {
+        let id = $(this).data('id');
+        let name = $('.project-input-' + id).val();
+
+        $.ajax({
+            url: '/api/project/' + id,
+            method: 'PUT',
+            data: JSON.stringify({
+                name: name,
+            }),
+            success: function (data) {
+                $('.btn-cancel-project-' + id).toggleClass('d-none');
+                $('.btn-save-project-' + id).toggleClass('d-none');
+                $('.btn-edit-project-' + id).toggleClass('d-none');
+                $('.btn-delete-project-' + id).toggleClass('d-none');
+                $('.project-input-' + id).toggleClass('d-none');
+                $('.project-name-' + id).toggleClass('d-none');
+                $('.project-name-' + id).html('<i class="far fa-list-alt"></i>' + data.project.name);
+
+                showAlert('Project successfully edited!', 'alert-success');
+            },
+            error: function (data) {
+                if (data.status === 400) {
+                    showAlert(getErrorsFromResponse(data), 'alert-warning');
+                } else {
+                    showAlert('Error, please try again later...', 'alert-danger');
+                }
             }
         });
     });
@@ -290,4 +305,13 @@ function showAlert(message, type) {
     setTimeout(function () {
         $('.alert').removeClass('show');
     }, 3000);
+}
+
+function getErrorsFromResponse(data) {
+    let htmlMessage = '';
+    $.each(data.responseJSON.errors.fields, function(field, message) {
+        htmlMessage = htmlMessage + `<b>${field}</b>: ${message}<br>`;
+    });
+
+    return htmlMessage;
 }

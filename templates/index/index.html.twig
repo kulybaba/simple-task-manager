@@ -9,10 +9,17 @@
                 <div class="col-4 project-{{ project.id }}">
                     <div class="card project-card">
                         <div class="card-header card-caption">
-                            <i class="far fa-list-alt"></i><b>{{ project.name }}</b>
-                            <div class="float-right">
-                                <a href="#"><i class="fas fa-pen"></i></a>
-                                <a class="btn-delete-project" href="#" data-id="{{ project.id }}"><i class="fas fa-trash-alt"></i></a>
+                            <div class="row">
+                                <div class="col-10">
+                                    <span class="project-name project-name-{{ project.id }}"><i class="far fa-list-alt"></i>{{ project.name }}</span>
+                                    <input class="project-input project-input-{{ project.id }} d-none" type="text">
+                                </div>
+                                <div class="col float-right text-right">
+                                    <a class="btn-edit-project btn-edit-project-{{ project.id }}" href="#" data-id="{{ project.id }}"><i class="fas fa-pen"></i></a>
+                                    <a class="btn-delete-project btn-delete-project-{{ project.id }}" href="#" data-id="{{ project.id }}"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="btn-save-project btn-save-project-{{ project.id }} d-none" href="#" data-id="{{ project.id }}"><i class="fas fa-save"></i></a>
+                                    <a class="btn-cancel-project btn-cancel-project-{{ project.id }} d-none" href="#" data-id="{{ project.id }}"><i class="fas fa-times"></i></a>
+                                </div>
                             </div>
                         </div>
                         <div class="card-header card-add-task">
@@ -40,7 +47,7 @@
                                                     <input class="task-input task-input-{{ task.id }} d-none" type="text">
                                                 </div>
                                                 <div class="col">
-                                                    <div class="list-group-actions float-right">
+                                                    <div class="list-group-actions float-right text-right">
                                                         <a class="btn-save-task btn-save-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-save"></i></a>
                                                         <a class="btn-cancel-task btn-cancel-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-times"></i></a>
                                                         <a class="btn-sort-task btn-sort-task btn-sort-task-{{ task.id }}" href="#"><i class="fas fa-sort"></i></a>
@@ -64,7 +71,7 @@
         </div>
     {% else %}
         <div class="row justify-content-md-center h-100 align-items-center">
-            <div class="col-3 text-center main-wrapper">
+            <div class="col-3 text-center no-project">
                 <p>No projects...</p>
             </div>
         </div>

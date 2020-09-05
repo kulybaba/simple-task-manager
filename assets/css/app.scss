@@ -15,10 +15,10 @@
     background-repeat: no-repeat;
 }
 
-.main-wrapper {
+.no-project {
     border: 2px solid $blue;
     border-radius: 10px;
-    padding: 40px;
+    padding-top: 20px;
     background-color: $white;
 }
 
@@ -86,6 +86,10 @@ input[type='checkbox'] {
         background-color: $blue;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+
+        .project-input {
+            width: 100%;
+        }
     }
 
     .card-add-task {

@@ -27,7 +27,7 @@ class ProjectController extends AbstractController
     ) {
         /** @var Project $project */
         $project = $serializer->deserialize($request->getContent(), Project::class, JsonEncoder::FORMAT);
-        $validateService->validate($project, ['validation_groups' => 'add-project']);
+        $validateService->validate($project, ['validation_groups' => 'create-project']);
         $project->setUser($this->getUser());
 
         $entityManager->persist($project);
@@ -49,6 +49,29 @@ class ProjectController extends AbstractController
 
         return $this->json([
             'success' => true,
+        ]);
+    }
+
+    /**
+     * @Route("/project/{id}", requirements={"id"="\d+"}, name="project_edit", methods={"PUT"})
+     */
+    public function edit(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        ValidateService $validateService,
+        Project $project
+    ) {
+        /** @var Project $projectWithName */
+        $projectWithName = $serializer->deserialize($request->getContent(), Project::class, JsonEncoder::FORMAT);
+        $validateService->validate($projectWithName, ['validation_groups' => 'edit-project']);
+
+        $project->setName($projectWithName->getName());
+        $entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+            'project' => $project,
         ]);
     }
 }
