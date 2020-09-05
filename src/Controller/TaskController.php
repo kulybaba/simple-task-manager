@@ -39,7 +39,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}", requirements={"id"="\d+"}, name="task_edit", methods={"POST"})
+     * @Route("/task/{id}", requirements={"id"="\d+"}, name="task_edit", methods={"PUT"})
      */
     public function edit(
         Request $request,

@@ -6,6 +6,7 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
@@ -23,6 +24,15 @@ class Project
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Name should not be blank",
+     *     groups={"create-project", "edit-project"}
+     * )
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Name must contain maximum 255 characters",
+     *     groups={"create-project", "edit-project"}
+     * )
      *
      * @var string $name
      */
