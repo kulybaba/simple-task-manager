@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Validator\Constraints\Date;
 
 class TaskNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
 {
@@ -41,6 +42,7 @@ class TaskNormalizer implements NormalizerInterface, DenormalizerInterface, Cach
             'id' => $object->getId(),
             'text' => $object->getText(),
             'position' => $object->getPosition(),
+            'deadline' => $object->getDeadline()->format('d M Y'),
         ];
     }
 
@@ -61,6 +63,10 @@ class TaskNormalizer implements NormalizerInterface, DenormalizerInterface, Cach
 
         if (isset($data['projectId'])) {
             $task->setProject($this->projectRepository->findOneBy(['id' => $data['projectId']]));
+        }
+
+        if (isset($data['deadline'])) {
+            $task->setDeadline(new \DateTime($data['deadline']));
         }
 
         return $task;

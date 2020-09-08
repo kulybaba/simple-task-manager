@@ -27,7 +27,9 @@ $(document).ready(function () {
         $('.btn-delete-task-' + id).toggleClass('d-none');
         $('.task-checkbox-' + id).toggleClass('d-none');
         $('.task-text-' + id).toggleClass('d-none');
+        $('.task-deadline-' + id).toggleClass('d-none');
         $('.task-input-' + id).toggleClass('d-none');
+        $('.task-datepicker-' + id).toggleClass('d-none');
         $('.task-input-' + id).val($('.task-text-' + id).text());
     });
 
@@ -41,7 +43,9 @@ $(document).ready(function () {
         $('.btn-delete-task-' + id).toggleClass('d-none');
         $('.task-checkbox-' + id).toggleClass('d-none');
         $('.task-text-' + id).toggleClass('d-none');
+        $('.task-deadline-' + id).toggleClass('d-none');
         $('.task-input-' + id).toggleClass('d-none');
+        $('.task-datepicker-' + id).toggleClass('d-none');
     });
 
     $('.main-container').on('click', '.btn-edit-project', function () {

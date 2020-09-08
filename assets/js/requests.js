@@ -15,6 +15,9 @@ $(document).ready(function () {
                 projectId: id
             }),
             success: function (data) {
+                let date = new Date(data.task.deadline);
+                let deadline = date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
                 if ($('.task-list-' + id).length === 0) {
                     $('.project-card-body-' + id).empty();
                     $('.project-card-body-' + id).append(`<ul class="list-group task-list task-list-${id}"></ul>`);
@@ -32,6 +35,10 @@ $(document).ready(function () {
                                 <input class="task-checkbox task-checkbox-${data.task.id}" type="checkbox" data-id="${data.task.id}">
                                 <span class="task-text task-text-${data.task.id}">${text}</span>
                                 <input class="task-input task-input-${data.task.id} d-none" type="text">
+                                <div class="float-right text-right">
+                                    <input class="datepicker task-datepicker-${data.task.id} d-none" type="date" value="${deadline}">
+                                    <span class="task-deadline task-deadline-${data.task.id} pull-right">${data.task.deadline}</span>
+                                </div>
                             </div>
                             <div class="col">
                                 <div class="list-group-actions float-right text-right">
@@ -94,6 +101,7 @@ $(document).ready(function () {
         let id = $(this).data('id');
 
         $('.task-text-' + id).toggleClass('task-checked');
+        $('.task-deadline-' + id).toggleClass('task-checked');
         $.ajax({
             url: `/api/task/${id}/completion`,
             method: 'POST',
@@ -111,14 +119,21 @@ $(document).ready(function () {
     $('.main-container').on('click', '.btn-save-task', function () {
         let id = $(this).data('id');
         let text = $('.task-input-' + id).val();
+        let deadline = $('.task-datepicker-' + id).val();
 
         $.ajax({
             url: '/api/task/' + id,
             method: 'PUT',
             data: JSON.stringify({
                 text: text,
+                deadline: deadline,
             }),
             success: function (data) {
+                let deadline = new Date(data.task.deadline);
+                deadline = deadline.getFullYear() + '-' + ('0' + (deadline.getMonth()+1)).slice(-2) + '-' + ('0' + deadline.getDate()).slice(-2);
+                let currentDate = new Date();
+                currentDate = currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth()+1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2);
+
                 $('.btn-save-task-' + id).toggleClass('d-none');
                 $('.btn-cancel-task-' + id).toggleClass('d-none');
                 $('.btn-sort-task-' + id).toggleClass('d-none');
@@ -126,8 +141,18 @@ $(document).ready(function () {
                 $('.btn-delete-task-' + id).toggleClass('d-none');
                 $('.task-checkbox-' + id).toggleClass('d-none');
                 $('.task-text-' + id).toggleClass('d-none');
+                $('.task-deadline-' + id).toggleClass('d-none');
                 $('.task-input-' + id).toggleClass('d-none');
+                $('.task-datepicker-' + id).toggleClass('d-none');
                 $('.task-text-' + id).text(data.task.text);
+                $('.task-deadline-' + id).text(data.task.deadline);
+                $('.task-datepicker-' + id).val(deadline);
+
+                if (deadline === currentDate) {
+                    $('.task-deadline-' + id).addClass('text-danger');
+                } else {
+                    $('.task-deadline-' + id).removeClass('text-danger');
+                }
 
                 showAlert('Task successfully edited!', 'alert-success');
             },

@@ -59,6 +59,22 @@ class Task
     private $position = 0;
 
     /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank(
+     *     message="Deadline should not be blank",
+     *     groups={"add-task", "edit-task"}
+     * )
+     *
+     * @var \DateTimeInterface $deadline
+     */
+    private $deadline;
+
+    public function __construct()
+    {
+        $this->deadline = new \DateTime(date('Y-m-d', strtotime('+1 day')));
+    }
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -138,6 +154,25 @@ class Task
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getDeadline(): ?\DateTimeInterface
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * @param \DateTimeInterface $deadline
+     * @return $this
+     */
+    public function setDeadline(\DateTimeInterface $deadline): self
+    {
+        $this->deadline = $deadline;
 
         return $this;
     }
