@@ -24,9 +24,12 @@ class TaskController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
-        ValidateService $validateService
+        ValidateService $validateService,
+        TaskRepository $taskRepository
     ) {
+        /** @var Task $task */
         $task = $serializer->deserialize($request->getContent(), Task::class, JsonEncoder::FORMAT);
+        $task->setPosition($taskRepository->getMaxTaskId() + 1);
         $validateService->validate($task, ['validation_groups' => 'add-task']);
 
         $entityManager->persist($task);
@@ -48,11 +51,12 @@ class TaskController extends AbstractController
         ValidateService $validateService,
         Task $task
     ) {
-        /** @var Task $taskWithText */
-        $taskWithText = $serializer->deserialize($request->getContent(), Task::class, JsonEncoder::FORMAT);
-        $validateService->validate($taskWithText, ['validation_groups' => 'edit-task']);
+        /** @var Task $editedTask */
+        $editedTask = $serializer->deserialize($request->getContent(), Task::class, JsonEncoder::FORMAT);
+        $validateService->validate($editedTask, ['validation_groups' => 'edit-task']);
 
-        $task->setText($taskWithText->getText());
+        $task->setText($editedTask->getText());
+        $task->setDeadline($editedTask->getDeadline());
         $entityManager->flush();
 
         return $this->json([

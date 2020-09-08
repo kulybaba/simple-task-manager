@@ -14,8 +14,25 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TaskRepository extends ServiceEntityRepository
 {
+    /**
+     * TaskRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Task::class);
+    }
+
+    /**
+     * @return int|mixed|string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getMaxTaskId()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('MAX(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
