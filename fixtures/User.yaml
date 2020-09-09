@@ -1,0 +1,7 @@
+App\Entity\User:
+    User{1..2}:
+        firstName: <firstName()>
+        lastName: <lastName()>
+        email: <email()>
+        apiToken: "token<current()>"
+        password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$1XwhLosa/sXy+Aw0yBC8kg\$HgrOADbs5qNfvt1Vi+CXYjgj9E4U5qBRtU+kiBE/wZo' #11111111
