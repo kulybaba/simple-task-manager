@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    app:
+        build: .
+        container_name: app
+        working_dir: /home/www
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./:/home/www
+
+    db:
+        container_name: db
+        image: postgres:12-alpine
+        environment:
+            POSTGRES_USER: main
+            POSTGRES_PASSWORD: main
+            POSTGRES_DB: db_main
+        ports:
+            - "5432:5432"

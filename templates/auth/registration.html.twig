@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-md-center h-100 align-items-center">
+        <div class="col-3 text-center main-wrapper">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary" type="submit" class="btn">Registration</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
