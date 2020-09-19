@@ -5,3 +5,10 @@ App\Entity\User:
         email: <email()>
         apiToken: "token<current()>"
         password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$1XwhLosa/sXy+Aw0yBC8kg\$HgrOADbs5qNfvt1Vi+CXYjgj9E4U5qBRtU+kiBE/wZo' #11111111
+
+    User3:
+        firstName: <firstName()>
+        lastName: <lastName()>
+        email: "test@mail.com"
+        apiToken: "token3"
+        password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$1XwhLosa/sXy+Aw0yBC8kg\$HgrOADbs5qNfvt1Vi+CXYjgj9E4U5qBRtU+kiBE/wZo' #11111111
