@@ -1,0 +1,6 @@
+App\Entity\Task:
+    Task{1..4}:
+        text: <name()>
+        completed: false
+        position: <current()>
+        deadline: <(new \DateTime('2020-09-15'))>

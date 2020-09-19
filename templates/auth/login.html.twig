@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-md-center h-100 align-items-center">
+        <div class="col-3 text-center main-wrapper">
+            {% if errors %}
+                <div class="alert alert-warning">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div><br>
+            {% endif %}
+
+            {{ form_start(form) }}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            {{ form_widget(form) }}
+            <button class="btn btn-primary" type="submit">Login</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

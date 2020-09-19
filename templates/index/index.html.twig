@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Simple Task Manager{% endblock %}
+
+{% block body %}
+    {% if projects|length > 0 %}
+        <div class="row main-row">
+            {% for project in projects %}
+                <div class="col-4 project-{{ project.id }}">
+                    <div class="card project-card">
+                        <div class="card-header card-caption">
+                            <div class="row">
+                                <div class="col-10">
+                                    <span class="project-name project-name-{{ project.id }}"><i class="far fa-list-alt"></i>{{ project.name }}</span>
+                                    <input class="project-input project-input-{{ project.id }} d-none" type="text">
+                                </div>
+                                <div class="col float-right text-right">
+                                    <a class="btn-edit-project btn-edit-project-{{ project.id }}" href="#" data-id="{{ project.id }}"><i class="fas fa-pen"></i></a>
+                                    <a class="btn-delete-project btn-delete-project-{{ project.id }}" href="#" data-id="{{ project.id }}"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="btn-save-project btn-save-project-{{ project.id }} d-none" href="#" data-id="{{ project.id }}"><i class="fas fa-save"></i></a>
+                                    <a class="btn-cancel-project btn-cancel-project-{{ project.id }} d-none" href="#" data-id="{{ project.id }}"><i class="fas fa-times"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-header card-add-task">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control add-task-input-{{ project.id }}" placeholder="Start typing here to create a task...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success btn-add-task" type="button" data-id="{{ project.id }}">Add task</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body text-black project-card-body project-card-body-{{ project.id }}">
+                            {% if project.tasks|length > 0 %}
+                                <ul class="list-group task-list task-list-{{ project.id }}">
+                                    {% for task in project.tasks|sort((a, b) => a.position <=> b.position) %}
+                                        <li class="list-group-item list-group-item-action task task-{{ task.id }}" data-id="{{ task.id }}">
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <input class="task-checkbox task-checkbox-{{ task.id }}" type="checkbox" {% if task.completed %}checked="checked"{% endif %} data-id="{{ task.id }}">
+                                                    <span class="task-text task-text-{{ task.id}} {% if task.completed %}task-checked{% endif %}">{{ task.text }}</span>
+                                                    <input class="task-input task-input-{{ task.id }} d-none" type="text">
+                                                    <div class="float-right text-right">
+                                                        <input class="datepicker task-datepicker-{{ task.id }} d-none" type="date" value="{{ task.deadline|date('Y-m-d') }}">
+                                                        <span class="task-deadline task-deadline-{{ task.id}} {% if task.completed %}task-checked{% endif %} {% if task.deadline|date('Y-m-d') == 'now'|date('Y-m-d') %}text-danger{% endif %} pull-right">{{ task.deadline|date('d M Y') }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="list-group-actions float-right text-right">
+                                                        <a class="btn-save-task btn-save-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-save"></i></a>
+                                                        <a class="btn-cancel-task btn-cancel-task-{{ task.id }} d-none" href="#" data-id="{{ task.id }}"><i class="fas fa-times"></i></a>
+                                                        <a class="btn-sort-task btn-sort-task btn-sort-task-{{ task.id }}" href="#"><i class="fas fa-sort"></i></a>
+                                                        <a class="btn-edit-task btn-edit-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-pen"></i></a>
+                                                        <a class="btn-delete-task btn-delete-task-{{ task.id }}" href="#" data-id="{{ task.id }}"><i class="fas fa-trash-alt"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center task-no">
+                                    <p class="mt-4">No tasks...</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="row justify-content-md-center h-100 align-items-center">
+            <div class="col-3 text-center no-project">
+                <p>No projects...</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
