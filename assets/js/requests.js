@@ -104,7 +104,7 @@ $(document).ready(function () {
         $('.task-deadline-' + id).toggleClass('task-checked');
         $.ajax({
             url: `/api/task/${id}/completion`,
-            method: 'POST',
+            method: 'PUT',
             success: function (data) {
                 let completion = data.completed ? 'checked' : 'unchecked';
                 showAlert(`Task successfully ${completion}!`, 'alert-success');

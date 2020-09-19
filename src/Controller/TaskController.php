@@ -79,7 +79,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}/completion", requirements={"id"="\d+"}, name="task_completion", methods={"POST"})
+     * @Route("/task/{id}/completion", requirements={"id"="\d+"}, name="task_completion", methods={"PUT"})
      */
     public function completion(EntityManagerInterface $entityManager, Task $task)
     {

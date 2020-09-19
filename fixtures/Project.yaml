@@ -1,0 +1,10 @@
+App\Entity\Project:
+    Project1:
+        user: "@User1"
+        name: <name()>
+        tasks: ["@Task1", "@Task2"]
+
+    Project2:
+        user: "@User3"
+        name: <name()>
+        tasks: ["@Task3", "@Task4"]
